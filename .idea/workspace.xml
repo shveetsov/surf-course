@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0add8bb1-aab3-4898-b12d-8a747e648072" name="Changes" comment="Первая публикация" />
+    <list default="true" id="0add8bb1-aab3-4898-b12d-8a747e648072" name="Changes" comment="Задание травка муравка">
+      <change afterPath="$PROJECT_DIR$/task-1/bin/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-1/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/task-1/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-1/bin/surf_dart_courses_template.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-1/lib/surf_dart_courses_template.dart" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,6 +91,7 @@
       <workItem from="1697775759003" duration="1383000" />
       <workItem from="1697777833215" duration="84000" />
       <workItem from="1697777919479" duration="59000" />
+      <workItem from="1697777980887" duration="432000" />
     </task>
     <task id="LOCAL-00001" summary="Первая публикация">
       <option name="closed" value="true" />
@@ -110,7 +117,15 @@
       <option name="project" value="LOCAL" />
       <updated>1697776607446</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Задание травка муравка">
+      <option name="closed" value="true" />
+      <created>1697778154511</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1697778154511</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +156,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Первая публикация" />
-    <option name="LAST_COMMIT_MESSAGE" value="Первая публикация" />
+    <MESSAGE value="Задание травка муравка" />
+    <option name="LAST_COMMIT_MESSAGE" value="Задание травка муравка" />
   </component>
 </project>
