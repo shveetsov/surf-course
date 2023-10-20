@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0add8bb1-aab3-4898-b12d-8a747e648072" name="Changes" comment="Задание травка муравка" />
+    <list default="true" id="0add8bb1-aab3-4898-b12d-8a747e648072" name="Changes" comment="Задание травка муравка">
+      <change afterPath="$PROJECT_DIR$/task-1/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-1/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/task-1/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-1/test/surf_dart_courses_template_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/task-1/test/surf_dart_courses_template_test.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,7 +53,6 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "task-1",
@@ -90,7 +94,7 @@
       <workItem from="1697775759003" duration="1383000" />
       <workItem from="1697777833215" duration="84000" />
       <workItem from="1697777919479" duration="59000" />
-      <workItem from="1697777980887" duration="852000" />
+      <workItem from="1697777980887" duration="1407000" />
     </task>
     <task id="LOCAL-00001" summary="Первая публикация">
       <option name="closed" value="true" />
@@ -132,7 +136,15 @@
       <option name="project" value="LOCAL" />
       <updated>1697778438714</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Задание травка муравка">
+      <option name="closed" value="true" />
+      <created>1697779009716</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697779009716</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

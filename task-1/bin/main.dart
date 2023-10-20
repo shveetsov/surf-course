@@ -153,5 +153,57 @@ final mapAfter2010 = {
 };
 
 void main() {
-  print('Test 1');
+  // Создаю список всех территорий
+  List<Territory> listAllTerritory = [];
+
+  // Наполняю список из старой БД
+  for (var territory in mapBefore2010.values) {
+    listAllTerritory.addAll(territory);
+  }
+
+  // Наполняю список из новой БД
+  for (var territory in mapAfter2010.values) {
+    listAllTerritory.addAll(territory);
+  }
+
+  // Создаю список всей техники
+  Set<AgriculturalMachinery> listAllAgriculturalMachinery = {};
+
+  // Добавляю уникальную технику в список
+  for (var value in listAllTerritory) {listAllAgriculturalMachinery.addAll(value.machineries.toSet());}
+
+  // Создаю переменную для вычисления суммарного возраста
+  int sumAgesAllAgriculturalMachinery = 0;
+
+  // Суммирую возраст
+  for (var value in listAllAgriculturalMachinery) {
+    sumAgesAllAgriculturalMachinery += value.releaseDate.year;
+  }
+
+  // Вывожу средний возраст всей техники
+  print('Средний возраст техники: ${DateTime.now().year-(sumAgesAllAgriculturalMachinery/listAllAgriculturalMachinery.length).round()}');
+
+  // Создаю отсортированный список
+  List<AgriculturalMachinery> listSortAgriculturalMachinery = listAllAgriculturalMachinery.toList();
+
+  // Сортирую его
+  listSortAgriculturalMachinery.sort((a, b) => a.releaseDate.year.compareTo(b.releaseDate.year));
+
+  // Создаю список половины орг техники
+  List<AgriculturalMachinery> listHalfAgriculturalMachinery = [];
+
+  // Заполняю его
+  for (int i = 0; i < (listSortAgriculturalMachinery.length/2).ceil(); i++) {
+    listHalfAgriculturalMachinery.add(listSortAgriculturalMachinery[i]);
+  }
+
+  // Обнуляю переменную для нового расчета
+  sumAgesAllAgriculturalMachinery = 0;
+
+  // Суммирую возраст
+  for (var element in listHalfAgriculturalMachinery) {sumAgesAllAgriculturalMachinery += element.releaseDate.year;}
+
+  // Вывожу итог
+  print('Средний возраст 50% техники: ${DateTime.now().year-(sumAgesAllAgriculturalMachinery/(listSortAgriculturalMachinery.length/2).ceil()).round()}');
+
 }
