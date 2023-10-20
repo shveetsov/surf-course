@@ -1,6 +1,6 @@
 # Description of your result
 
-ООО "Травка-муравка"
+Работа с классами
 
 ## Description
 
