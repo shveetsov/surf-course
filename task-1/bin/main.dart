@@ -170,7 +170,7 @@ void main() {
   Set<AgriculturalMachinery> listAllAgriculturalMachinery = {};
 
   // Добавляю уникальную технику в список
-  for (var value in listAllTerritory) {listAllAgriculturalMachinery.addAll(value.machineries.toSet());}
+  for (var value in listAllTerritory) {listAllAgriculturalMachinery.addAll(value.machineries);}
 
   // Создаю переменную для вычисления суммарного возраста
   int sumAgesAllAgriculturalMachinery = 0;
