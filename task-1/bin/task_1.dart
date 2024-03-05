@@ -203,7 +203,10 @@ void main() {
   // Суммирую возраст
   for (var element in listHalfAgriculturalMachinery) {sumAgesAllAgriculturalMachinery += element.releaseDate.year;}
 
+  // ср возраст в переменную
+  int averageAge = DateTime.now().year-(sumAgesAllAgriculturalMachinery/(listSortAgriculturalMachinery.length/2).ceil()).round();
+
   // Вывожу итог
-  print('Средний возраст 50% техники: ${DateTime.now().year-(sumAgesAllAgriculturalMachinery/(listSortAgriculturalMachinery.length/2).ceil()).round()}');
+  print('Средний возраст 50% техники: $averageAge');
 
 }
