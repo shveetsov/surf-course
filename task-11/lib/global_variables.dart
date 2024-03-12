@@ -53,5 +53,12 @@ abstract class GlobalStyleText {
           fontSize: 10,
           fontWeight: FontWeight.w600,
           height: 1.26));
+}
 
+abstract class AppAssets {
+  static const article = "assets/icons/article.svg";
+  static const cart = "assets/icons/local_mall.svg";
+  static const person = "assets/icons/person_outline.svg";
+  static const search = "assets/icons/search.svg";
+  static const sort = "assets/icons/sort.svg";
 }

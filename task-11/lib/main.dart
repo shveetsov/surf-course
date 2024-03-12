@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -8,24 +7,20 @@ import 'list_products.dart';
 import 'models.dart' as model;
 
 enum SortType {
-  none,
-  nameAsc,
-  nameDesc,
-  priceAsc,
-  priceDesc,
-  typeAsc,
-  typeDesc
-}
+  none("Без сортировки"),
+  nameAsc("По имени от А до Я"),
+  nameDesc("По имени от Я до А"),
+  priceAsc("По возрастанию"),
+  priceDesc("По убыванию"),
+  typeAsc("По типу от А до Я"),
+  typeDesc("По типу от Я до А");
 
-var sortTypeStr = <String, String>{
-  "none": "Без сортировки",
-  "nameAsc": "По имени от А до Я",
-  "nameDesc": "По имени от Я до А",
-  "priceAsc": "По возрастанию",
-  "priceDesc": "По убыванию",
-  "typeAsc": "По типу от А до Я",
-  "typeDesc": "По типу от Я до А",
-};
+  const SortType(this.name);
+  final String name;
+
+  @override
+  String toString() => name;
+}
 
 SortType selectedSortType = SortType.none;
 bool checkFilter = false;
@@ -121,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     listProductsSort = {
-      model.Category.all: [...dataForStudents]
+      model.Category.all: dataForStudents
     };
 
     // обновление экрана если применен новый фильтр
@@ -194,9 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (listProductsSort.length > 1) {
                           check = true;
                         }
-                        return listProductsCategory(
-                            listProductsSort.entries.toList()[index].value,
-                            check);
+                        return ListProductsCategory(products: listProductsSort.entries.toList()[index].value, checkTitle: check,);
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return const Divider(
@@ -217,32 +210,67 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomNavBar(),
+      bottomNavigationBar: const CustomNavBar(),
     );
   }
 }
 
-Widget listProductsCategory(
-    List<model.ProductEntity> products, bool checkTitle) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (checkTitle)
-        Text(
-          products[0].category.name,
-          style: GlobalStyleText.total,
-        ),
-      ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ProductCard(product: products[index]);
-        },
-      ),
-    ],
-  );
+class ListProductsCategory extends StatefulWidget {
+  final List<model.ProductEntity> products;
+  final bool checkTitle;
+
+  const ListProductsCategory({super.key, required this.products, required this.checkTitle});
+
+  @override
+  State<ListProductsCategory> createState() => _ListProductsCategoryState();
 }
+
+class _ListProductsCategoryState extends State<ListProductsCategory> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.checkTitle)
+          Text(
+            widget.products[0].category.name,
+            style: GlobalStyleText.total,
+          ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.products.length,
+          itemBuilder: (context, index) {
+            return ProductCard(product: widget.products[index]);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+
+// Widget listProductsCategory(
+//     List<model.ProductEntity> products, bool checkTitle) {
+//   return Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: [
+//       if (checkTitle)
+//         Text(
+//           products[0].category.name,
+//           style: GlobalStyleText.total,
+//         ),
+//       ListView.builder(
+//         shrinkWrap: true,
+//         physics: const NeverScrollableScrollPhysics(),
+//         itemCount: products.length,
+//         itemBuilder: (context, index) {
+//           return ProductCard(product: products[index]);
+//         },
+//       ),
+//     ],
+//   );
+// }
 
 class SortWindow extends StatefulWidget {
   const SortWindow({super.key});
@@ -258,6 +286,56 @@ class _SortWindowState extends State<SortWindow> {
   void initState() {
     super.initState();
     _selectedSortType = selectedSortType;
+  }
+
+  void _updateData(SortType sort) {
+    setState(() {
+      _selectedSortType = sort;
+    });
+  }
+
+  void switchSelected (){
+    switch (selectedSortType) {
+      case SortType.none:
+        listProductsSort = {
+          model.Category.all: dataForStudents
+        };
+        checkFilter = false;
+      case SortType.nameAsc:
+        listProductsSort = {
+          model.Category.all: dataForStudents
+        };
+        sortProductsAtoZ(
+            listProductsSort[model.Category.all]!);
+        checkFilter = true;
+      case SortType.nameDesc:
+        listProductsSort = {
+          model.Category.all: dataForStudents
+        };
+        sortProductsZtoA(
+            listProductsSort[model.Category.all]!);
+        checkFilter = true;
+      case SortType.priceAsc:
+        listProductsSort = {
+          model.Category.all: dataForStudents
+        };
+        sortProductsPriceAtoZ(
+            listProductsSort[model.Category.all]!);
+        checkFilter = true;
+      case SortType.priceDesc:
+        listProductsSort = {
+          model.Category.all: dataForStudents
+        };
+        sortProductsPriceZtoA(
+            listProductsSort[model.Category.all]!);
+        checkFilter = true;
+      case SortType.typeAsc:
+        sortProductsByCategoryAtoZ(dataForStudents);
+        checkFilter = true;
+      case SortType.typeDesc:
+        sortProductsByCategoryZtoA(dataForStudents);
+        checkFilter = true;
+    }
   }
 
   @override
@@ -302,16 +380,16 @@ class _SortWindowState extends State<SortWindow> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                radioListTile('none', SortType.none),
+                RadioListTileSort(sortValue: SortType.none, selectedSortType: _selectedSortType, callback: _updateData),
                 titleDivider('По имени'),
-                radioListTile('nameAsc', SortType.nameAsc),
-                radioListTile('nameDesc', SortType.nameDesc),
+                RadioListTileSort(sortValue: SortType.nameAsc, selectedSortType: _selectedSortType, callback: _updateData),
+                RadioListTileSort(sortValue: SortType.nameDesc, selectedSortType: _selectedSortType, callback: _updateData),
                 titleDivider('По цене'),
-                radioListTile('priceAsc', SortType.priceAsc),
-                radioListTile('priceDesc', SortType.priceDesc),
+                RadioListTileSort(sortValue: SortType.priceAsc, selectedSortType: _selectedSortType, callback: _updateData),
+                RadioListTileSort(sortValue: SortType.priceDesc, selectedSortType: _selectedSortType, callback: _updateData),
                 titleDivider('По типу'),
-                radioListTile('typeAsc', SortType.typeAsc),
-                radioListTile('typeDesc', SortType.typeDesc),
+                RadioListTileSort(sortValue: SortType.typeAsc, selectedSortType: _selectedSortType, callback: _updateData),
+                RadioListTileSort(sortValue: SortType.typeDesc, selectedSortType: _selectedSortType, callback: _updateData),
                 const SizedBox(height: 16),
                 Container(
                   width: double.infinity,
@@ -322,48 +400,7 @@ class _SortWindowState extends State<SortWindow> {
                       setState(() {
                         selectedSortType = _selectedSortType;
                         update.value = !update.value;
-
-                        switch (selectedSortType) {
-                          case SortType.none:
-                            listProductsSort = {
-                              model.Category.all: [...dataForStudents]
-                            };
-                            checkFilter = false;
-                          case SortType.nameAsc:
-                            listProductsSort = {
-                              model.Category.all: [...dataForStudents]
-                            };
-                            sortProductsAtoZ(
-                                listProductsSort[model.Category.all]!);
-                            checkFilter = true;
-                          case SortType.nameDesc:
-                            listProductsSort = {
-                              model.Category.all: [...dataForStudents]
-                            };
-                            sortProductsZtoA(
-                                listProductsSort[model.Category.all]!);
-                            checkFilter = true;
-                          case SortType.priceAsc:
-                            listProductsSort = {
-                              model.Category.all: [...dataForStudents]
-                            };
-                            sortProductsPriceAtoZ(
-                                listProductsSort[model.Category.all]!);
-                            checkFilter = true;
-                          case SortType.priceDesc:
-                            listProductsSort = {
-                              model.Category.all: [...dataForStudents]
-                            };
-                            sortProductsPriceZtoA(
-                                listProductsSort[model.Category.all]!);
-                            checkFilter = true;
-                          case SortType.typeAsc:
-                            sortProductsByCategoryAtoZ([...dataForStudents]);
-                            checkFilter = true;
-                          case SortType.typeDesc:
-                            sortProductsByCategoryZtoA([...dataForStudents]);
-                            checkFilter = true;
-                        }
+                        switchSelected();
                         Navigator.pop(context);
                       });
                     },
@@ -419,24 +456,33 @@ class _SortWindowState extends State<SortWindow> {
       ),
     );
   }
+}
 
-  Widget radioListTile(String title, dynamic sortValue) {
+class RadioListTileSort extends StatelessWidget {
+  final SortType sortValue;
+  final SortType selectedSortType;
+  final Function(SortType) callback;
+
+  const RadioListTileSort({super.key, required this.sortValue, required this.selectedSortType, required this.callback});
+
+  @override
+  Widget build(BuildContext context) {
     return RadioListTile<SortType>(
-      title: Text(sortTypeStr[title].toString()),
+      title: Text(sortValue.toString()),
       value: sortValue,
-      groupValue: _selectedSortType,
+      groupValue: selectedSortType,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       activeColor: GlobalColors.brightGreen,
       onChanged: (SortType? value) {
-        setState(() {
-          if (value != null) {
-            _selectedSortType = value;
-          }
-        });
+        if (value != null) {
+          callback(value);
+        }
       },
     );
   }
 }
+
+
 
 class Total extends StatefulWidget {
   final List<model.ProductEntity> productList;
@@ -456,7 +502,10 @@ class _TotalState extends State<Total> {
   @override
   void initState() {
     super.initState();
+    initData();
+  }
 
+  void initData() {
     for (var product in widget.productList) {
       if (product.sale != 0) {
         _sale += product.price * (product.sale / 100);
@@ -559,6 +608,9 @@ class ProductCard extends StatelessWidget {
         style: GlobalStyleText.textBoldProduct,
       );
     }
+
+    String salePrice = processNumber(product.price * (product.sale / 100) / 100);
+
     return Row(
       children: [
         Text(
@@ -569,7 +621,7 @@ class ProductCard extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Text(
-          '${(processNumber(product.price * (product.sale / 100) / 100))} руб',
+          '$salePrice руб',
           style:
               GlobalStyleText.textBoldProduct.copyWith(color: GlobalColors.red),
         ),
@@ -661,7 +713,7 @@ class TitleFilter extends StatelessWidget {
         ),
         FilterIconButton(
           onPressed: onPressed,
-          iconPath: 'assets/icons/sort.svg',
+          iconPath: AppAssets.sort,
           background: GlobalColors.smokyWhite,
           width: 32,
           height: 32,
@@ -751,13 +803,13 @@ class CustomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            iconTitle('assets/icons/article.svg', 'Каталог',
+            iconTitle(AppAssets.article, 'Каталог',
                 GlobalColors.motherOfPearlBlackberry),
-            iconTitle('assets/icons/search.svg', 'Поиск',
+            iconTitle(AppAssets.search, 'Поиск',
                 GlobalColors.motherOfPearlBlackberry),
-            iconTitle('assets/icons/local_mall.svg', 'Корзина',
+            iconTitle(AppAssets.cart, 'Корзина',
                 GlobalColors.motherOfPearlBlackberry),
-            iconTitle('assets/icons/person_outline.svg', 'Личное',
+            iconTitle(AppAssets.person, 'Личное',
                 GlobalColors.brightGreen),
           ],
         ),
