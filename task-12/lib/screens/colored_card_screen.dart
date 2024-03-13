@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:task_12/models/colored_card.dart';
 
 import '../repositories/global_variables.dart';
 
-class ColoredCardScreen extends StatefulWidget {
+class ColoredCardScreen extends StatelessWidget {
   final ColoredCard coloredCard;
   final Function(ColoredCard, BuildContext, TypeColor) copyColor;
 
@@ -13,20 +12,15 @@ class ColoredCardScreen extends StatefulWidget {
       {super.key, required this.coloredCard, required this.copyColor});
 
   @override
-  State<ColoredCardScreen> createState() => _ColoredCardScreenState();
-}
-
-class _ColoredCardScreenState extends State<ColoredCardScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(widget.coloredCard.colorHex),
+        backgroundColor: Color(coloredCard.colorHex),
         elevation: 0,
         scrolledUnderElevation: 0,
         iconTheme: const IconThemeData(
           color:
-              Colors.white, // Здесь укажите желаемый цвет иконки кнопки назад
+              AppColors.white,
         ),
       ),
       body: Column(
@@ -34,7 +28,7 @@ class _ColoredCardScreenState extends State<ColoredCardScreen> {
         children: [
           Flexible(
               child: Container(
-            color: Color(widget.coloredCard.colorHex),
+            color: Color(coloredCard.colorHex),
           )),
           Flexible(
             child: Padding(
@@ -43,14 +37,13 @@ class _ColoredCardScreenState extends State<ColoredCardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.coloredCard.name,
-                    style: GlobalTextStyle.titleApp
-                        .copyWith(color: GlobalColors.sapphireBlue),
+                    coloredCard.name,
+                    style: AppTextStyle.titleApp,
                   ),
                   const SizedBox(height: 16),
                   ButtonColorHEX(
-                    copyColor: widget.copyColor,
-                    coloredCard: widget.coloredCard,
+                    copyColor: copyColor,
+                    coloredCard: coloredCard,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -58,8 +51,8 @@ class _ColoredCardScreenState extends State<ColoredCardScreen> {
                     children: [
                       Expanded(
                         child: ButtonColorRGB(
-                          copyColor: widget.copyColor,
-                          coloredCard: widget.coloredCard,
+                          copyColor: copyColor,
+                          coloredCard: coloredCard,
                           title: 'Red',
                           typeColor: TypeColor.r,
                         ),
@@ -67,8 +60,8 @@ class _ColoredCardScreenState extends State<ColoredCardScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ButtonColorRGB(
-                          copyColor: widget.copyColor,
-                          coloredCard: widget.coloredCard,
+                          copyColor: copyColor,
+                          coloredCard: coloredCard,
                           title: 'Green',
                           typeColor: TypeColor.g,
                         ),
@@ -76,8 +69,8 @@ class _ColoredCardScreenState extends State<ColoredCardScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ButtonColorRGB(
-                          copyColor: widget.copyColor,
-                          coloredCard: widget.coloredCard,
+                          copyColor: copyColor,
+                          coloredCard: coloredCard,
                           title: 'Blue',
                           typeColor: TypeColor.b,
                         ),
@@ -107,7 +100,6 @@ class ButtonColorHEX extends StatefulWidget {
 
 class _ButtonColorHEXState extends State<ButtonColorHEX> {
   bool copy = false;
-  final String assetsIconCopy = 'assets/icons/copy_icon.svg';
 
   Future<void> timeCopy() async {
     setState(() {
@@ -134,9 +126,9 @@ class _ButtonColorHEXState extends State<ButtonColorHEX> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x1437394A), // Цвет тени
-              blurRadius: 12, // Размытие тени; создаёт эффект "мягкости"
-              offset: Offset(0, 12), // Смещение тени по X и Y
+              color: Color(0x1437394A),
+              blurRadius: 12,
+              offset: Offset(0, 12),
             ),
           ],
         ),
@@ -145,22 +137,23 @@ class _ButtonColorHEXState extends State<ButtonColorHEX> {
           children: [
             Text(
               'Hex',
-              style: GlobalTextStyle.textColoredCard
-                  .copyWith(color: GlobalColors.sapphireBlue),
+              style: AppTextStyle.textColoredCard,
             ),
             Row(
               children: [
                 Text(
                   widget.coloredCard.copyColor(TypeColor.hex).substring(1),
-                  style: GlobalTextStyle.textColoredCard
-                      .copyWith(color: GlobalColors.sapphireBlue),
+                  style: AppTextStyle.textColoredCard,
                 ),
-                const SizedBox(width: 8),
-                AnimatedOpacity(
-                    opacity: copy ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: SvgPicture.asset(assetsIconCopy,
-                        semanticsLabel: 'Скопировано')),
+                if (copy)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: AnimatedOpacity(
+                      opacity: copy ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: SvgPicture.asset(AppAssets.assetsIconCopy,
+                          semanticsLabel: 'Скопировано'),),
+                ),
               ],
             ),
           ],
@@ -170,7 +163,7 @@ class _ButtonColorHEXState extends State<ButtonColorHEX> {
   }
 }
 
-class ButtonColorRGB extends StatefulWidget {
+class ButtonColorRGB extends StatelessWidget {
   final String title;
   final TypeColor typeColor;
   final ColoredCard coloredCard;
@@ -184,27 +177,22 @@ class ButtonColorRGB extends StatefulWidget {
       required this.typeColor});
 
   @override
-  State<ButtonColorRGB> createState() => _ButtonColorRGBState();
-}
-
-class _ButtonColorRGBState extends State<ButtonColorRGB> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.copyColor(widget.coloredCard, context, widget.typeColor);
+        copyColor(coloredCard, context, typeColor);
       },
       child: Container(
         height: 56,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x1437394A), // Цвет тени
-              blurRadius: 12, // Размытие тени; создаёт эффект "мягкости"
-              offset: Offset(0, 12), // Смещение тени по X и Y
+              color: Color(0x1437394A),
+              blurRadius: 12,
+              offset: Offset(0, 12),
             ),
           ],
         ),
@@ -212,15 +200,12 @@ class _ButtonColorRGBState extends State<ButtonColorRGB> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.title,
-              style: GlobalTextStyle.textColoredCard
-                  .copyWith(color: GlobalColors.sapphireBlue),
+              title,
+              style: AppTextStyle.textColoredCard,
             ),
-            const SizedBox(width: 16),
             Text(
-              widget.coloredCard.copyColor(widget.typeColor),
-              style: GlobalTextStyle.textColoredCard
-                  .copyWith(color: GlobalColors.sapphireBlue),
+              coloredCard.copyColor(typeColor),
+              style: AppTextStyle.textColoredCard,
             ),
           ],
         ),

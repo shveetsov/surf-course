@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:task_12/models/bloc/color_palette_bloc.dart';
@@ -44,9 +45,38 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  void copyColor(ColoredCard coloredCard, BuildContext context, TypeColor typeColor) {
-    _colorPaletteBloc
-        .add(CopyColorPalette(coloredCard: coloredCard, context: context, typeColor: typeColor));
+  void copyColor(
+      ColoredCard coloredCard, BuildContext context, TypeColor typeColor) {
+    _colorPaletteBloc.add(CopyColorPalette(
+        coloredCard: coloredCard, context: context, typeColor: typeColor, copySnackBar: copySnackBar));
+  }
+  
+  void copySnackBar(String copy, int colorHex){
+    Clipboard.setData(ClipboardData(text: copy)).then(
+          (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            padding: const EdgeInsets.all(16),
+            duration: const Duration(milliseconds: 500),
+            content: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(copy),
+                  const SizedBox(width: 8),
+                  Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                          color: Color(colorHex),
+                          borderRadius: BorderRadius.circular(8)))
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -62,11 +92,45 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Эксклюзивная палитра «Colored Box»',
-                style: GlobalTextStyle.titleApp
-                    .copyWith(color: GlobalColors.sapphireBlue),
+                style: AppTextStyle.titleApp
+                    .copyWith(color: AppColors.sapphireBlue),
               ),
             ),
             const SizedBox(height: 10),
+            // BlocListener<ColorPaletteBloc, ColorPaletteState>(
+            //   bloc: _colorPaletteBloc,
+            //   listener: (context, state) {
+            //     if (state is CopyColorPaletteSnackBar) {
+            //       Clipboard.setData(ClipboardData(text: state.copy)).then(
+            //         (_) {
+            //           ScaffoldMessenger.of(context).showSnackBar(
+            //             SnackBar(
+            //               padding: const EdgeInsets.all(16),
+            //               duration: const Duration(milliseconds: 500),
+            //               content: Center(
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.center,
+            //                   children: [
+            //                     Text(state.copy),
+            //                     const SizedBox(width: 8),
+            //                     Container(
+            //                         width: 32,
+            //                         height: 32,
+            //                         decoration: BoxDecoration(
+            //                             color:
+            //                                 Color(state.coloredCard.colorHex),
+            //                             borderRadius: BorderRadius.circular(8)))
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     }
+            //   },
+            //   child: Container(),
+            // ),
             BlocBuilder<ColorPaletteBloc, ColorPaletteState>(
               bloc: _colorPaletteBloc,
               builder: (context, state) {
@@ -153,7 +217,6 @@ class ColorCard extends StatefulWidget {
 
 class _ColorCardState extends State<ColorCard> {
   bool copy = false;
-  final String assetsIconCopy = 'assets/icons/copy_icon.svg';
 
   Future<void> timeCopy() async {
     setState(() {
@@ -172,10 +235,14 @@ class _ColorCardState extends State<ColorCard> {
         widget.copyColor(widget.coloredCard, context, TypeColor.hex);
         timeCopy();
       },
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ColoredCardScreen(coloredCard: widget.coloredCard, copyColor: widget.copyColor,)),
+          MaterialPageRoute(
+              builder: (context) => ColoredCardScreen(
+                    coloredCard: widget.coloredCard,
+                    copyColor: widget.copyColor,
+                  )),
         );
       },
       child: Column(
@@ -191,21 +258,20 @@ class _ColorCardState extends State<ColorCard> {
           const SizedBox(height: 8),
           Text(
             widget.coloredCard.name,
-            style: GlobalTextStyle.titleColoredCard
-                .copyWith(color: GlobalColors.sapphireBlue),
+            style: AppTextStyle.titleColoredCard,
           ),
           Row(
             children: [
               Text(
                 widget.coloredCard.value,
-                style: GlobalTextStyle.titleColoredCard
-                    .copyWith(color: GlobalColors.sapphireBlue),
+                style: AppTextStyle.titleColoredCard,
               ),
               const SizedBox(width: 4),
               AnimatedOpacity(
                   opacity: copy ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 200),
-                  child: SvgPicture.asset(assetsIconCopy, semanticsLabel: 'Скопировано')),
+                  child: SvgPicture.asset(AppAssets.assetsIconCopy,
+                      semanticsLabel: 'Скопировано')),
             ],
           ),
         ],

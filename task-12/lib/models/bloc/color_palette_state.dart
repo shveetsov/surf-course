@@ -12,6 +12,4 @@ class ColorPaletteLoaded extends ColorPaletteState {
   ColorPaletteLoaded({required this.coloredCards});
 }
 
-class ColorPaletteLoadedFailed extends ColorPaletteState {
-
-}
+class ColorPaletteLoadedFailed extends ColorPaletteState {}

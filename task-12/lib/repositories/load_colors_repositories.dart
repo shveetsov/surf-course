@@ -13,7 +13,6 @@ class LoadColorsRepositories {
         _coloredCards.add(coloredCard);
       }
     });
-    //await Future.error('error');
     await Future.delayed(const Duration(seconds: 1));
     return _coloredCards;
   }
