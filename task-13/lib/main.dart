@@ -190,7 +190,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 8),
                     ButtonProfile(
                       title: AppTexts.designTheme,
-                      text: 'Системная',
+                      text: widget.themeMode == ThemeMode.system ? 'Системная' :widget.themeMode == ThemeMode.light ? 'Светлая' : 'Темная',
                       icon: true,
                       onTap: showWindow,
                       context: context,
