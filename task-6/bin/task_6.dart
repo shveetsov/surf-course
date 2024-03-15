@@ -15,7 +15,7 @@ class Product {
 
   @override
   String toString() {
-    return "$id\t$category\t$name\t${price}руб.\t${quantity}шт.";
+    return "$id\t$category\t$name\t$priceруб.\t$quantityшт.";
   }
 
   // Фабричный конструктор для создания экземпляра Item из строки

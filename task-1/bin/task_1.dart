@@ -6,10 +6,10 @@ class Territory {
   final List<AgriculturalMachinery> machineries;
 
   Territory(
-      this.areaInHectare,
-      this.crops,
-      this.machineries,
-      );
+    this.areaInHectare,
+    this.crops,
+    this.machineries,
+  );
 }
 
 class AgriculturalMachinery {
@@ -17,12 +17,13 @@ class AgriculturalMachinery {
   final DateTime releaseDate;
 
   AgriculturalMachinery(
-      this.id,
-      this.releaseDate,
-      );
+    this.id,
+    this.releaseDate,
+  );
 
   /// Переопределяем оператор "==", чтобы сравнивать объекты по значению.
   @override
+  // ignore: non_nullable_equals_parameter
   bool operator ==(Object? other) {
     if (other is! AgriculturalMachinery) return false;
     if (other.id == id && other.releaseDate == releaseDate) return true;
@@ -170,7 +171,9 @@ void main() {
   Set<AgriculturalMachinery> listAllAgriculturalMachinery = {};
 
   // Добавляю уникальную технику в список
-  for (var value in listAllTerritory) {listAllAgriculturalMachinery.addAll(value.machineries);}
+  for (var value in listAllTerritory) {
+    listAllAgriculturalMachinery.addAll(value.machineries);
+  }
 
   // Создаю переменную для вычисления суммарного возраста
   int sumAgesAllAgriculturalMachinery = 0;
@@ -181,19 +184,22 @@ void main() {
   }
 
   // Вывожу средний возраст всей техники
-  print('Средний возраст техники: ${DateTime.now().year-(sumAgesAllAgriculturalMachinery/listAllAgriculturalMachinery.length).round()}');
+  print(
+      'Средний возраст техники: ${DateTime.now().year - (sumAgesAllAgriculturalMachinery / listAllAgriculturalMachinery.length).round()}');
 
   // Создаю отсортированный список
-  List<AgriculturalMachinery> listSortAgriculturalMachinery = listAllAgriculturalMachinery.toList();
+  List<AgriculturalMachinery> listSortAgriculturalMachinery =
+      listAllAgriculturalMachinery.toList();
 
   // Сортирую его
-  listSortAgriculturalMachinery.sort((a, b) => a.releaseDate.year.compareTo(b.releaseDate.year));
+  listSortAgriculturalMachinery
+      .sort((a, b) => a.releaseDate.year.compareTo(b.releaseDate.year));
 
   // Создаю список половины орг техники
   List<AgriculturalMachinery> listHalfAgriculturalMachinery = [];
 
   // Заполняю его
-  for (int i = 0; i < (listSortAgriculturalMachinery.length/2).ceil(); i++) {
+  for (int i = 0; i < (listSortAgriculturalMachinery.length / 2).ceil(); i++) {
     listHalfAgriculturalMachinery.add(listSortAgriculturalMachinery[i]);
   }
 
@@ -201,12 +207,16 @@ void main() {
   sumAgesAllAgriculturalMachinery = 0;
 
   // Суммирую возраст
-  for (var element in listHalfAgriculturalMachinery) {sumAgesAllAgriculturalMachinery += element.releaseDate.year;}
+  for (var element in listHalfAgriculturalMachinery) {
+    sumAgesAllAgriculturalMachinery += element.releaseDate.year;
+  }
 
   // ср возраст в переменную
-  int averageAge = DateTime.now().year-(sumAgesAllAgriculturalMachinery/(listSortAgriculturalMachinery.length/2).ceil()).round();
+  int averageAge = DateTime.now().year -
+      (sumAgesAllAgriculturalMachinery /
+              (listSortAgriculturalMachinery.length / 2).ceil())
+          .round();
 
   // Вывожу итог
   print('Средний возраст 50% техники: $averageAge');
-
 }

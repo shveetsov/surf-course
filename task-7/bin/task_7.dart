@@ -172,9 +172,9 @@ void main(){
     print(category);
     subcategories.forEach((subcategory, products) {
       print("  $subcategory:");
-      products.forEach((product) {
+      for (var product in products) {
         print("    $product");
-      });
+      }
     });
   });
 }
