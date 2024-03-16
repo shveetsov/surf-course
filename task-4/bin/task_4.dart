@@ -3,6 +3,7 @@ class PokerPlayer {
   final List<String> _currentHand = ['King of clubs', 'Nine of hearts'];
 
   /// Субъективная оценка выигрыша
+  // ignore: unused_field
   double _surenessInWin = 0;
 
   /// Вычислить шансы на выигрыш
