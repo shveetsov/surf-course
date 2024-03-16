@@ -58,13 +58,13 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   final SettingsRepository settingsRepository;
   final Future<void> loadThemeMode;
-  ThemeMode themeMode;
-  AppThemeScheme appThemeScheme;
+  final ThemeMode themeMode;
+  final AppThemeScheme appThemeScheme;
 
-  MainScreen({
+  const MainScreen({
     super.key,
     required this.settingsRepository,
     required this.loadThemeMode,
@@ -72,38 +72,32 @@ class MainScreen extends StatefulWidget {
     required this.appThemeScheme,
   });
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
 
-class _MainScreenState extends State<MainScreen> {
-  void showWindow() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context)
-          .extension<CustomThemeExtension>()!
-          .customTextColor4!,
-      barrierColor: Theme.of(context)
-          .extension<CustomThemeExtension>()!
-          .customTextColor5!,
-      elevation: 0,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) => SortWindow(
-        loadThemeMode: widget.loadThemeMode,
-        settingsRepository: widget.settingsRepository,
-        context: context,
-        themeMode: widget.themeMode,
-        appThemeScheme: widget.appThemeScheme,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    var customTheme = Theme.of(context).extension<CustomThemeExtension>();
+    final ThemeData theme = Theme.of(context);
+    final customTheme = Theme.of(context).extension<CustomThemeExtension>();
+
+    void showWindow() {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: customTheme!
+            .customTextColor4!,
+        barrierColor: customTheme
+            .customTextColor5!,
+        elevation: 0,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (context) => SortWindow(
+          loadThemeMode: loadThemeMode,
+          settingsRepository: settingsRepository,
+          themeMode: themeMode,
+          appThemeScheme: appThemeScheme,
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -190,7 +184,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 8),
                     ButtonProfile(
                       title: AppTexts.designTheme,
-                      text: widget.themeMode == ThemeMode.system ? 'Системная' :widget.themeMode == ThemeMode.light ? 'Светлая' : 'Темная',
+                      text: themeMode == ThemeMode.system ? AppTexts.themeSystem :themeMode == ThemeMode.light ? AppTexts.themeLight : AppTexts.themeDark,
                       icon: true,
                       onTap: showWindow,
                       context: context,
@@ -209,7 +203,6 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class SortWindow extends StatefulWidget {
-  final BuildContext context;
   final SettingsRepository settingsRepository;
   final Future<void> loadThemeMode;
   ThemeMode themeMode;
@@ -217,7 +210,6 @@ class SortWindow extends StatefulWidget {
 
   SortWindow({
     super.key,
-    required this.context,
     required this.settingsRepository,
     required this.loadThemeMode,
     required this.themeMode,
@@ -253,9 +245,9 @@ class _SortWindowState extends State<SortWindow> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(widget.context);
-    var customTheme =
-        Theme.of(widget.context).extension<CustomThemeExtension>();
+    final ThemeData theme = Theme.of(context);
+    final customTheme =
+        Theme.of(context).extension<CustomThemeExtension>();
     return SingleChildScrollView(
       child: SafeArea(
         child: Center(
@@ -301,15 +293,13 @@ class _SortWindowState extends State<SortWindow> {
                 themeMode: ThemeMode.system,
                 selectedThemeMode: _selectedThemeMode,
                 callback: _updateDataThemeMode,
-                title: 'Системная',
-                context1: widget.context,
+                title: AppTexts.themeSystem,
               ),
               RadioListTileTheme(
                 themeMode: ThemeMode.light,
                 selectedThemeMode: _selectedThemeMode,
                 callback: _updateDataThemeMode,
-                title: 'Светлая',
-                context1: widget.context,
+                title: AppTexts.themeLight,
               ),
               if (_selectedThemeMode == ThemeMode.light)
               ListSchemeTheme(callback: _updateDataAppThemeScheme, selectedAppThemeScheme: _selectedAppThemeScheme,),
@@ -317,8 +307,7 @@ class _SortWindowState extends State<SortWindow> {
                 themeMode: ThemeMode.dark,
                 selectedThemeMode: _selectedThemeMode,
                 callback: _updateDataThemeMode,
-                title: 'Темная',
-                context1: widget.context,
+                title: AppTexts.themeDark,
               ),
               if (_selectedThemeMode == ThemeMode.dark)
                 ListSchemeTheme(callback: _updateDataAppThemeScheme, selectedAppThemeScheme: _selectedAppThemeScheme,),
@@ -341,7 +330,7 @@ class _SortWindowState extends State<SortWindow> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        customTheme!.customTextColor7!), // Цвет фона
+                        customTheme.customTextColor7!), // Цвет фона
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.white), // Цвет текста
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -381,12 +370,14 @@ class ListSchemeTheme extends StatefulWidget {
 class _ListSchemeThemeState extends State<ListSchemeTheme> {
   @override
   Widget build(BuildContext context) {
+    final customTheme =
+    Theme.of(context).extension<CustomThemeExtension>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Цветовая схема', style: AppTextStyles.myAwardsTitle.copyWith(color: Theme.of(context).extension<CustomThemeExtension>()!.customTextColor1!),),
+          Text('Цветовая схема', style: AppTextStyles.myAwardsTitle.copyWith(color: customTheme!.customTextColor1!),),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -415,8 +406,8 @@ class SchemeTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    var customTheme =
+    final ThemeData theme = Theme.of(context);
+    final customTheme =
     Theme.of(context).extension<CustomThemeExtension>();
     return GestureDetector(
       onTap: (){
@@ -436,7 +427,7 @@ class SchemeTheme extends StatelessWidget {
           children: [
             SvgPicture.asset(icon),
             const SizedBox(height: 4),
-            Text(title, style: AppTextStyles.avatarEdit.copyWith(color: selectedAppThemeScheme==appThemeScheme ? customTheme!.customTextColor2! : customTheme!.customTextColor1!),),
+            Text(title, style: AppTextStyles.avatarEdit.copyWith(color: selectedAppThemeScheme==appThemeScheme ? customTheme.customTextColor2! : customTheme.customTextColor1!),),
           ],
         ),
       ),
@@ -449,7 +440,6 @@ class RadioListTileTheme extends StatelessWidget {
   final ThemeMode themeMode;
   final ThemeMode selectedThemeMode;
   final Function(ThemeMode) callback;
-  final BuildContext context1;
 
   const RadioListTileTheme(
       {super.key,
@@ -457,12 +447,12 @@ class RadioListTileTheme extends StatelessWidget {
       required this.selectedThemeMode,
       required this.callback,
       required this.title,
-      required this.context1});
+      });
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    var customTheme =
+    final ThemeData theme = Theme.of(context);
+    final customTheme =
     Theme.of(context).extension<CustomThemeExtension>();
     
     return RadioListTile<ThemeMode>(
@@ -518,8 +508,8 @@ class ButtonProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    var customTheme = Theme.of(context).extension<CustomThemeExtension>();
+    final ThemeData theme = Theme.of(context);
+    final customTheme = Theme.of(context).extension<CustomThemeExtension>();
     return GestureDetector(
       onTap: () {
         onTap();
@@ -539,12 +529,12 @@ class ButtonProfile extends StatelessWidget {
                 Text(
                   title,
                   style: AppTextStyles.myAwardsTitle
-                      .copyWith(color: customTheme!.customTextColor1!),
+                      .copyWith(color: customTheme.customTextColor1!),
                 ),
                 Text(
                   text,
                   style: AppTextStyles.myAwardsTitle
-                      .copyWith(color: customTheme!.customTextColor2!),
+                      .copyWith(color: customTheme.customTextColor2!),
                 ),
               ],
             ),

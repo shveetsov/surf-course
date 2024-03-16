@@ -27,13 +27,20 @@ class AppThemeData {
     brightness: Brightness.light,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.motherOfPearlBlackberry, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.blackAndBrown, // цвет текста внутри кнопки в профиле
-        customTextColor3: AppColors.white1, // Цвет кнопки в профиле
-        customTextColor4: AppColors.white, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.blackAndBrown.withOpacity(0.6), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.smokyWhite, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.persianBlue, // Цвет кнопки в всп окне
+        // Названия полей кнопок в профиле и награды
+        customTextColor1: AppColors.motherOfPearlBlackberry,
+        // цвет текста внутри кнопки в профиле
+        customTextColor2: AppColors.blackAndBrown,
+        // Цвет кнопки в профиле
+        customTextColor3: AppColors.white1,
+        // Цвет фона всплывающего окна
+        customTextColor4: AppColors.white,
+        // Цвет за фоном фона всплывающего окна
+        customTextColor5: AppColors.blackAndBrown.withOpacity(0.6),
+        // Цвет фона цветовой схемы
+        customTextColor6: AppColors.smokyWhite,
+        // Цвет кнопки в всп окне
+        customTextColor7: AppColors.persianBlue,
       ),
     ],
   );
@@ -48,13 +55,20 @@ class AppThemeData {
     brightness: Brightness.dark,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.motherOfPearlBlackberry, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.white, // цвет текста внутри кнопки в профиле ----
-        customTextColor3: AppColors.blackAndBrown, // Цвет кнопки в профиле
-        customTextColor4: AppColors.blackAndBrown, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.black.withOpacity(0.8), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.signalBlack, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.persianBlue, // Цвет кнопки в всп окне
+        // Названия полей кнопок в профиле и награды
+        customTextColor1: AppColors.motherOfPearlBlackberry,
+        // цвет текста внутри кнопки в профиле ----
+        customTextColor2: AppColors.white,
+        // Цвет кнопки в профиле
+        customTextColor3: AppColors.blackAndBrown,
+        // Цвет фона всплывающего окна
+        customTextColor4: AppColors.blackAndBrown,
+        // Цвет за фоном фона всплывающего окна
+        customTextColor5: AppColors.black.withOpacity(0.8),
+        // Цвет фона цветовой схемы
+        customTextColor6: AppColors.signalBlack,
+        // Цвет кнопки в всп окне
+        customTextColor7: AppColors.persianBlue,
       ),
     ],
   );
@@ -70,13 +84,20 @@ class AppThemeData {
     brightness: Brightness.light,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.blueGray, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.sapphireBlue, // цвет текста внутри кнопки в профиле
-        customTextColor3: AppColors.white, // Цвет кнопки в профиле
-        customTextColor4: AppColors.white, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.sapphireBlue.withOpacity(0.6), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.lavender, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.royalBlue, // Цвет кнопки в всп окне
+        // Названия полей кнопок в профиле и награды
+        customTextColor1: AppColors.blueGray,
+        // цвет текста внутри кнопки в профиле
+        customTextColor2: AppColors.sapphireBlue,
+        // Цвет кнопки в профиле
+        customTextColor3: AppColors.white,
+        // Цвет фона всплывающего окна
+        customTextColor4: AppColors.white,
+        // Цвет за фоном фона всплывающего окна
+        customTextColor5: AppColors.sapphireBlue.withOpacity(0.6),
+        // Цвет фона цветовой схемы
+        customTextColor6: AppColors.lavender,
+        // Цвет кнопки в всп окне
+        customTextColor7: AppColors.royalBlue,
       ),
     ],
   );
@@ -91,13 +112,13 @@ class AppThemeData {
     brightness: Brightness.dark,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.blueGray, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.white, // цвет текста внутри кнопки в профиле ----
-        customTextColor3: AppColors.moderatePurplishBlue, // Цвет кнопки в профиле
-        customTextColor4: AppColors.moderatePurplishBlue, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.sapphireBlue.withOpacity(0.8), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.marengo, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.royalBlue, // Цвет кнопки в всп окне
+        customTextColor1: AppColors.blueGray,
+        customTextColor2: AppColors.white,
+        customTextColor3: AppColors.moderatePurplishBlue,
+        customTextColor4: AppColors.moderatePurplishBlue,
+        customTextColor5: AppColors.sapphireBlue.withOpacity(0.8),
+        customTextColor6: AppColors.marengo,
+        customTextColor7: AppColors.royalBlue,
       ),
     ],
   );
@@ -113,13 +134,13 @@ class AppThemeData {
     brightness: Brightness.light,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.paleGreyBrown, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.blackAndBrown, // цвет текста внутри кнопки в профиле
-        customTextColor3: AppColors.white, // Цвет кнопки в профиле
-        customTextColor4: AppColors.white, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.greyUmber.withOpacity(0.6), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.smokyWhite1, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.darkAmber, // Цвет кнопки в всп окне
+        customTextColor1: AppColors.paleGreyBrown,
+        customTextColor2: AppColors.blackAndBrown,
+        customTextColor3: AppColors.white,
+        customTextColor4: AppColors.white,
+        customTextColor5: AppColors.greyUmber.withOpacity(0.6),
+        customTextColor6: AppColors.smokyWhite1,
+        customTextColor7: AppColors.darkAmber,
       ),
     ],
   );
@@ -134,13 +155,13 @@ class AppThemeData {
     brightness: Brightness.dark,
     extensions: <ThemeExtension<dynamic>>[
       CustomThemeExtension(
-        customTextColor1: AppColors.paleGreyBrown, // Названия полей кнопок в профиле и награды
-        customTextColor2: AppColors.white, // цвет текста внутри кнопки в профиле ----
-        customTextColor3: AppColors.greyUmber, // Цвет кнопки в профиле
-        customTextColor4: AppColors.greyUmber, // Цвет фона всплывающего окна
-        customTextColor5: AppColors.greenishBlack.withOpacity(0.8), // Цвет за фоном фона всплывающего окна
-        customTextColor6: AppColors.darkGrey, // Цвет фона цветовой схемы
-        customTextColor7: AppColors.darkAmber, // Цвет кнопки в всп окне
+        customTextColor1: AppColors.paleGreyBrown,
+        customTextColor2: AppColors.white,
+        customTextColor3: AppColors.greyUmber,
+        customTextColor4: AppColors.greyUmber,
+        customTextColor5: AppColors.greenishBlack.withOpacity(0.8),
+        customTextColor6: AppColors.darkGrey,
+        customTextColor7: AppColors.darkAmber,
       ),
     ],
   );
