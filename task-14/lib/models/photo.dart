@@ -1,5 +1,5 @@
 class Photo {
   final String imagePath;
 
-  Photo({required this.imagePath});
+  const Photo({required this.imagePath});
 }

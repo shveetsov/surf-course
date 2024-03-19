@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_14/app_constants.dart';
-
-import '../models/photo.dart';
+import 'package:task_14/models/photo.dart';
 
 class PhotoScreen extends StatefulWidget {
   final List<Photo> listPhotos;
@@ -48,6 +47,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
