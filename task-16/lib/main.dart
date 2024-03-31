@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -113,20 +112,28 @@ class _MainScreenState extends State<MainScreen> {
 
     if (_isCheckedRabies) {
       allFieldsFilled = _controllerRabies.isNotEmpty;
-    }
-    if (_isCheckedCovid) {
-      allFieldsFilled = _controllerCovid.isNotEmpty;
-    }
-    if (_isCheckedMalaria) {
-      allFieldsFilled = _controllerMalaria.isNotEmpty;
+    } else {
+      _controllerRabies = '';
     }
 
+    if (_isCheckedCovid) {
+      allFieldsFilled = _controllerCovid.isNotEmpty;
+    } else {
+      _controllerCovid = '';
+    }
+
+    if (_isCheckedMalaria) {
+      allFieldsFilled = _controllerMalaria.isNotEmpty;
+    } else {
+      _controllerMalaria = '';
+    }
     Future.microtask(() => _checkIfAllFieldsAreFilled.value = allFieldsFilled);
   }
 
   void updateCheckedRabies(bool check) {
     setState(() {
       _isCheckedRabies = check;
+      checkIfAllFieldsAreFilled();
     });
   }
 
@@ -137,6 +144,7 @@ class _MainScreenState extends State<MainScreen> {
   void updateCheckedCovid(bool check) {
     setState(() {
       _isCheckedCovid = check;
+      checkIfAllFieldsAreFilled();
     });
   }
 
@@ -147,6 +155,7 @@ class _MainScreenState extends State<MainScreen> {
   void updateCheckedMalaria(bool check) {
     setState(() {
       _isCheckedMalaria = check;
+      checkIfAllFieldsAreFilled();
     });
   }
 
@@ -154,11 +163,20 @@ class _MainScreenState extends State<MainScreen> {
     _controllerMalaria = date;
   }
 
+  Future _send() async {
+    setState(() {
+      _sendForm = !_sendForm;
+    });
+    _checkIfAllFieldsAreFilled.value = false;
+    await Future.delayed(const Duration(seconds: 2));
+    _checkIfAllFieldsAreFilled.value = true;
+    setState(() {
+      _sendForm = !_sendForm;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -230,17 +248,15 @@ class _MainScreenState extends State<MainScreen> {
                 ValueListenableBuilder<bool>(
                   valueListenable: _checkIfAllFieldsAreFilled,
                   builder: (context, value, child) {
+                    bool check = value;
+                    if (value) {
+                      check = !_sendForm;
+                    }
                     return GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          _checkIfAllFieldsAreFilled.value = false;
-                          _sendForm = !_sendForm;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          _checkIfAllFieldsAreFilled.value = true;
-                          _sendForm = !_sendForm;
-                        });
+                      onTap: () {
+                        if (!_sendForm && value) {
+                          _send();
+                        }
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
@@ -248,14 +264,14 @@ class _MainScreenState extends State<MainScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 32),
                         decoration: BoxDecoration(
-                          color: value
+                          color: check
                               ? AppColors.ardentPink
                               : AppColors.veryPaleBlue,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
                               color: AppColors.ardentPink
-                                  .withOpacity(value ? 0.24 : 0),
+                                  .withOpacity(check ? 0.24 : 0),
                               // Цвет тени
                               blurRadius: 16,
                               // Размытие тени
@@ -265,11 +281,19 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                         child: Center(
-                            child: Text(
-                          AppTexts.send,
-                          style: AppTextStyles.text18
-                              .copyWith(color: AppColors.white),
-                        )),
+                            child: !_sendForm
+                                ? Text(
+                                    AppTexts.send,
+                                    style: AppTextStyles.text18
+                                        .copyWith(color: AppColors.white),
+                                  )
+                                : const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.white,
+                                    ),
+                                  )),
                       ),
                     );
                   },
@@ -283,6 +307,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+/// Кнопка прививки
 class CheckboxVaccinations extends StatelessWidget {
   final bool check;
   final Function(bool) updateChecked;
@@ -293,16 +318,17 @@ class CheckboxVaccinations extends StatelessWidget {
   final bool sendForm;
   final Function checkIfAllFieldsAreFilled;
 
-  const CheckboxVaccinations(
-      {super.key,
-      required this.check,
-      required this.iconPath,
-      required this.updateChecked,
-      required this.title,
-      required this.controller,
-      required this.updateDate,
-      required this.sendForm,
-      required this.checkIfAllFieldsAreFilled});
+  const CheckboxVaccinations({
+    super.key,
+    required this.check,
+    required this.iconPath,
+    required this.updateChecked,
+    required this.title,
+    required this.controller,
+    required this.updateDate,
+    required this.sendForm,
+    required this.checkIfAllFieldsAreFilled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +343,7 @@ class CheckboxVaccinations extends StatelessWidget {
           child: Container(
             width: double.infinity,
             color: Colors.white.withOpacity(0.001),
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
                 Container(
@@ -361,6 +387,7 @@ class CheckboxVaccinations extends StatelessWidget {
   }
 }
 
+/// Список прививок
 class MadeVaccinations extends StatelessWidget {
   final bool sendForm;
   final Function checkIfAllFieldsAreFilled;
@@ -380,22 +407,23 @@ class MadeVaccinations extends StatelessWidget {
   final String controllerMalaria;
   final Function(String) updateDateMalaria;
 
-  const MadeVaccinations(
-      {super.key,
-      required this.isCheckedRabies,
-      required this.updateCheckedRabies,
-      required this.controllerRabies,
-      required this.updateDateRabies,
-      required this.sendForm,
-      required this.checkIfAllFieldsAreFilled,
-      required this.isCheckedCovid,
-      required this.updateCheckedCovid,
-      required this.controllerCovid,
-      required this.updateDateCovid,
-      required this.isCheckedMalaria,
-      required this.updateCheckedMalaria,
-      required this.controllerMalaria,
-      required this.updateDateMalaria});
+  const MadeVaccinations({
+    super.key,
+    required this.isCheckedRabies,
+    required this.updateCheckedRabies,
+    required this.controllerRabies,
+    required this.updateDateRabies,
+    required this.sendForm,
+    required this.checkIfAllFieldsAreFilled,
+    required this.isCheckedCovid,
+    required this.updateCheckedCovid,
+    required this.controllerCovid,
+    required this.updateDateCovid,
+    required this.isCheckedMalaria,
+    required this.updateCheckedMalaria,
+    required this.controllerMalaria,
+    required this.updateDateMalaria,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -443,30 +471,64 @@ class MadeVaccinations extends StatelessWidget {
   }
 }
 
-class TextFieldEmail extends StatelessWidget {
-  final Key keyForm;
+/// Текстовое поле email
+class TextFieldEmail extends StatefulWidget {
+  final GlobalKey<FormState> keyForm;
   final TextEditingController controller;
   final bool sendForm;
   final Function checkIfAllFieldsAreFilled;
   final Function(bool) updateEmailCheck;
 
-  const TextFieldEmail(
-      {super.key,
-      required this.keyForm,
-      required this.controller,
-      required this.sendForm,
-      required this.checkIfAllFieldsAreFilled,
-      required this.updateEmailCheck});
+  const TextFieldEmail({
+    super.key,
+    required this.keyForm,
+    required this.controller,
+    required this.sendForm,
+    required this.checkIfAllFieldsAreFilled,
+    required this.updateEmailCheck,
+  });
+
+  @override
+  State<TextFieldEmail> createState() => _TextFieldEmailState();
+}
+
+class _TextFieldEmailState extends State<TextFieldEmail> {
+  late FocusNode _focusNode;
+  bool _error = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      // Если поле теряет фокус, вызываем валидацию формы
+      if (!_focusNode.hasFocus) {
+        setState(() {
+          _error = widget.keyForm.currentState?.validate() ?? true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Form(
-      key: keyForm,
+      key: widget.keyForm,
       child: TextFormField(
-        controller: controller,
+        focusNode: _focusNode,
+        controller: widget.controller,
         cursorColor: theme.primaryColor,
-        style: AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey),
+        style: _error
+            ? AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey)
+            : AppTextStyles.text16_18
+                .copyWith(color: AppColors.redOrangeCrayola),
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           fillColor: AppColors.white,
@@ -488,10 +550,10 @@ class TextFieldEmail extends StatelessWidget {
           errorStyle:
               AppTextStyles.text12.copyWith(color: AppColors.redOrangeCrayola),
         ),
-        enabled: !sendForm,
+        enabled: !widget.sendForm,
         validator: (value) {
-          updateEmailCheck(false);
-          checkIfAllFieldsAreFilled();
+          widget.updateEmailCheck(false);
+          widget.checkIfAllFieldsAreFilled();
           if (value == null || value.isEmpty) {
             return AppTexts
                 .enterEmail; // "Пожалуйста, введите электронную почту"
@@ -504,38 +566,71 @@ class TextFieldEmail extends StatelessWidget {
           if (!regex.hasMatch(value)) {
             return AppTexts.enterInvalidEmail;
           }
-          updateEmailCheck(true);
-          checkIfAllFieldsAreFilled();
+          widget.updateEmailCheck(true);
+          widget.checkIfAllFieldsAreFilled();
           return null;
         },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
 }
 
-class TextFieldWeight extends StatelessWidget {
-  final Key keyForm;
+/// Текстовое поле веса
+class TextFieldWeight extends StatefulWidget {
+  final GlobalKey<FormState> keyForm;
   final TextEditingController controller;
   final bool sendForm;
   final Function checkIfAllFieldsAreFilled;
 
-  const TextFieldWeight(
-      {super.key,
-      required this.keyForm,
-      required this.controller,
-      required this.sendForm,
-      required this.checkIfAllFieldsAreFilled});
+  const TextFieldWeight({
+    super.key,
+    required this.keyForm,
+    required this.controller,
+    required this.sendForm,
+    required this.checkIfAllFieldsAreFilled,
+  });
+
+  @override
+  State<TextFieldWeight> createState() => _TextFieldWeightState();
+}
+
+class _TextFieldWeightState extends State<TextFieldWeight> {
+  late FocusNode _focusNode;
+  bool _error = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      // Если поле теряет фокус, вызываем валидацию формы
+      if (!_focusNode.hasFocus) {
+        setState(() {
+          _error = widget.keyForm.currentState?.validate() ?? true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Form(
-      key: keyForm,
+      key: widget.keyForm,
       child: TextFormField(
-        controller: controller,
+        focusNode: _focusNode,
+        controller: widget.controller,
         cursorColor: theme.primaryColor,
-        style: AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey),
+        style: _error
+            ? AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey)
+            : AppTextStyles.text16_18
+                .copyWith(color: AppColors.redOrangeCrayola),
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           fillColor: AppColors.white,
@@ -557,12 +652,12 @@ class TextFieldWeight extends StatelessWidget {
           errorStyle:
               AppTextStyles.text12.copyWith(color: AppColors.redOrangeCrayola),
         ),
-        enabled: !sendForm,
+        enabled: !widget.sendForm,
         inputFormatters: [
           LengthLimitingTextInputFormatter(2),
         ],
         validator: (value) {
-          checkIfAllFieldsAreFilled();
+          widget.checkIfAllFieldsAreFilled();
           if (value == null || value.isEmpty) {
             return AppTexts.enterWeightKg;
           }
@@ -573,27 +668,27 @@ class TextFieldWeight extends StatelessWidget {
           if (number == null || number < 0) {
             return "Введите корректный вес";
           }
-
           return null;
         },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
 }
 
+/// Поле выбора даты
 class TextFieldBirthday extends StatefulWidget {
   final bool sendForm;
   final Function(String) updateDateBirthday;
   final Function checkIfAllFieldsAreFilled;
   final String title;
 
-  const TextFieldBirthday(
-      {super.key,
-      required this.sendForm,
-      required this.updateDateBirthday,
-      required this.checkIfAllFieldsAreFilled,
-      required this.title});
+  const TextFieldBirthday({
+    super.key,
+    required this.sendForm,
+    required this.updateDateBirthday,
+    required this.checkIfAllFieldsAreFilled,
+    required this.title,
+  });
 
   @override
   State<TextFieldBirthday> createState() => _TextFieldBirthdayState();
@@ -616,7 +711,7 @@ class _TextFieldBirthdayState extends State<TextFieldBirthday> {
     }
   }
 
-  buildMaterialDatePicker(BuildContext context) async {
+  Future<DateTime?> buildMaterialDatePicker(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -635,6 +730,7 @@ class _TextFieldBirthdayState extends State<TextFieldBirthday> {
       });
       widget.checkIfAllFieldsAreFilled();
     }
+    return null;
   }
 
   buildCupertinoDatePicker(BuildContext context) {
@@ -715,8 +811,9 @@ class _TextFieldBirthdayState extends State<TextFieldBirthday> {
   }
 }
 
-class TextFieldName extends StatelessWidget {
-  final Key keyForm;
+/// Текстовое поле имени
+class TextFieldName extends StatefulWidget {
+  final GlobalKey<FormState> keyForm;
   final TextEditingController controller;
   final bool sendForm;
   final Function checkIfAllFieldsAreFilled;
@@ -730,14 +827,46 @@ class TextFieldName extends StatelessWidget {
   });
 
   @override
+  State<TextFieldName> createState() => _TextFieldNameState();
+}
+
+class _TextFieldNameState extends State<TextFieldName> {
+  late FocusNode _focusNode;
+  bool _error = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      // Если поле теряет фокус, вызываем валидацию формы
+      if (!_focusNode.hasFocus) {
+        setState(() {
+          _error = widget.keyForm.currentState?.validate() ?? true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Form(
-      key: keyForm,
+      key: widget.keyForm,
       child: TextFormField(
-        controller: controller,
+        focusNode: _focusNode,
+        controller: widget.controller,
         cursorColor: theme.primaryColor,
-        style: AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey),
+        style: _error
+            ? AppTextStyles.text16_18.copyWith(color: AppColors.slateGrey)
+            : AppTextStyles.text16_18
+                .copyWith(color: AppColors.redOrangeCrayola),
         decoration: InputDecoration(
           fillColor: AppColors.white,
           filled: true,
@@ -758,38 +887,38 @@ class TextFieldName extends StatelessWidget {
           errorStyle:
               AppTextStyles.text12.copyWith(color: AppColors.redOrangeCrayola),
         ),
-        enabled: !sendForm,
+        enabled: !widget.sendForm,
         inputFormatters: [
           LengthLimitingTextInputFormatter(20),
         ],
         validator: (value) {
-          checkIfAllFieldsAreFilled();
-          // Удаление начальных и конечных пробелов и проверка, что строка не пуста.
+          widget.checkIfAllFieldsAreFilled();
           if (value == null || value.trim().isEmpty) {
-            return AppTexts.enterPetsName; // "Пожалуйста, введите имя питомца"
+            return AppTexts.enterPetsName;
           }
-          // Дополнительная проверка длины введённого значения после удаления пробелов.
+
           if (value.trim().length < 3) {
-            return "Имя должно содержать минимум 3 символа."; // Или используйте подходящую строку из ваших ресурсов.
+            return "Имя должно содержать минимум 3 символа.";
           }
           return null;
         },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
 }
 
+/// Список выбора животного
 class ListAnimal extends StatelessWidget {
   final ValueNotifier<Animal> controllerButtonAnimal;
   final Function(Animal) updateButtonAnimal;
   final bool sendForm;
 
-  const ListAnimal(
-      {super.key,
-      required this.controllerButtonAnimal,
-      required this.updateButtonAnimal,
-      required this.sendForm});
+  const ListAnimal({
+    super.key,
+    required this.controllerButtonAnimal,
+    required this.updateButtonAnimal,
+    required this.sendForm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -838,6 +967,7 @@ class ListAnimal extends StatelessWidget {
   }
 }
 
+/// Кнопка выбора животного
 class ButtonAnimal extends StatelessWidget {
   final String title;
   final String iconPath;
@@ -846,23 +976,20 @@ class ButtonAnimal extends StatelessWidget {
   final bool sendForm;
   final Function(Animal) updateButtonAnimal;
 
-  const ButtonAnimal(
-      {super.key,
-      required this.title,
-      required this.iconPath,
-      required this.currentAnimal,
-      required this.animal,
-      required this.updateButtonAnimal,
-      required this.sendForm});
+  const ButtonAnimal({
+    super.key,
+    required this.title,
+    required this.iconPath,
+    required this.currentAnimal,
+    required this.animal,
+    required this.updateButtonAnimal,
+    required this.sendForm,
+  });
 
   @override
   Widget build(BuildContext context) {
-    bool check = false;
-    if (animal == currentAnimal) {
-      check = true;
-    } else {
-      check = false;
-    }
+    final check = animal == currentAnimal;
+
     return GestureDetector(
       onTap: () {
         if (!sendForm) updateButtonAnimal(animal);
